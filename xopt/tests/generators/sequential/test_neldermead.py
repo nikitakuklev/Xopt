@@ -9,7 +9,7 @@ from scipy.optimize import minimize
 from xopt import VOCS, Xopt
 from xopt.errors import SeqGeneratorError
 from xopt.generators.sequential.neldermead import NelderMeadGenerator
-from xopt.resources.test_functions.ackley_20 import ackley, vocs as ackleyvocs
+from xopt.resources.test_functions.ackley import ackley, vocs as ackleyvocs
 from xopt.resources.test_functions.rosenbrock import (
     rosenbrock,
     rosenbrock2_vocs as rbvocs,
