@@ -51,10 +51,10 @@ class MOBOGenerator(MultiObjectiveBayesianGenerator):
         description="flag to specify if pareto front points are to be used during "
         "optimization of the acquisition function",
     )
+    _compatible_turbo_controllers = [SafetyTurboController]
+
     __doc__ = """Implements Multi-Objective Bayesian Optimization using the Log Expected
             Hypervolume Improvement acquisition function"""
-
-    _compatible_turbo_controllers = [SafetyTurboController]
 
     def _get_objective(self) -> MCMultiOutputObjective:
         """

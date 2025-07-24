@@ -13,6 +13,7 @@ from xopt.base import Xopt
 from xopt.errors import XoptError
 from xopt.evaluator import Evaluator
 from xopt.generators.bayesian.mobo import MOBOGenerator
+from xopt.generators.bayesian.turbo import SafetyTurboController
 from xopt.numerical_optimizer import GridOptimizer
 from xopt.resources.test_functions.tnk import (
     evaluate_TNK,
@@ -336,6 +337,31 @@ class TestMOBOGenerator:
             )
 
         check_generator_tensor_locations(gen, device_map[use_cuda])
+
+    def test_safety_turbo(self):
+        evaluator = Evaluator(function=evaluate_TNK)
+        reference_point = tnk_reference_point
+
+        gen = MOBOGenerator(
+            vocs=tnk_vocs,
+            reference_point=reference_point,
+            turbo_controller='safety'
+        )
+        gen = deepcopy(gen)
+        gen.n_monte_carlo_samples = 20
+
+        X = Xopt(generator=gen, evaluator=evaluator, vocs=tnk_vocs)
+        gen = X.generator
+        gen.numerical_optimizer.max_iter = 1
+        X.random_evaluate(100)
+        breakpoint()
+        X.step()
+        for i in range(20):
+            X.step()
+        breakpoint()
+        assert isinstance(gen.turbo_controller, SafetyTurboController)
+        #assert gen.turbo_controller.l
+        check_generator_tensor_locations(gen, device_map[False])
 
     def test_objective_constraint_nans(self):
         test_data = pd.DataFrame(
